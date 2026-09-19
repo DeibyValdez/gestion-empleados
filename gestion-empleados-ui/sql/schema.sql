@@ -28,6 +28,9 @@ CREATE TABLE IF NOT EXISTS empleados (
 
     -- Solo importa el día de contratación, no la hora: DATE.
     fecha_contratacion DATE          NOT NULL,
+    
+    -- Años completos de experiencia del empleado. No puede ir negativo.
+    anios_experiencia INT			NOT NULL DEFAULT 0,
 
     -- Un empleado que se retira NO se borra, solo deja de estar activo.
     -- BOOLEAN. Un empleado nuevo nace activo.
@@ -36,12 +39,13 @@ CREATE TABLE IF NOT EXISTS empleados (
     PRIMARY KEY (id),
 
     -- Regla de negocio: el salario debe ser mayor a cero (ni cero ni negativo).
-    CONSTRAINT chk_empleados_salario CHECK (salario > 0)
+    CONSTRAINT chk_empleados_salario CHECK (salario > 0),
+    CONSTRAINT chk_empleados_anios_experiencia CHECK (anios_experiencia >= 0)
 ) ENGINE = InnoDB;
 
 -- Datos de prueba. Ejecuta estos INSERT una sola vez;
 -- si corres el script otra vez se duplicarán los 3 empleados.
-INSERT INTO empleados (nombre, departamento, salario, fecha_contratacion, activo) VALUES
-    ('Ana Lucía Pérez',     'Sistemas',     8500.00, '2024-03-15', TRUE),
-    ('Carlos Roberto Mux',  'Ventas',       6200.00, '2023-07-01', TRUE),
-    ('Diana Sofía Cabrera', 'Contabilidad', 7100.00, '2022-01-10', FALSE);
+INSERT INTO empleados (nombre, departamento, salario, fecha_contratacion, anios_experiencia, activo) VALUES
+    ('Ana Lucía Pérez',     'Sistemas',     8500.00, '2024-03-15', 2, TRUE),
+    ('Carlos Roberto Mux',  'Ventas',       6200.00, '2023-07-01', 3, TRUE),
+    ('Diana Sofía Cabrera', 'Contabilidad', 7100.00, '2022-01-10', 8, FALSE);
