@@ -5,30 +5,30 @@ import java.time.LocalDate;
 
 public class Empleado {
 
-    private int id; // 0 mientras no se haya guardado en la base de datos
+    private int id;
     private String nombre;
     private String departamento;
     private BigDecimal salario;
     private LocalDate fechaContratacion;
+    private int aniosExperiencia;
     private boolean activo;
 
     public Empleado() {
     }
 
-    // Para empleados nuevos (el id lo asigna la base de datos)
     public Empleado(String nombre, String departamento, BigDecimal salario,
-                    LocalDate fechaContratacion, boolean activo) {
+                    LocalDate fechaContratacion, int aniosExperiencia, boolean activo) {
         this.nombre = nombre;
         this.departamento = departamento;
         this.salario = salario;
         this.fechaContratacion = fechaContratacion;
+        this.aniosExperiencia = aniosExperiencia;
         this.activo = activo;
     }
 
-    // Para empleados que ya existen en la base de datos
     public Empleado(int id, String nombre, String departamento, BigDecimal salario,
-                    LocalDate fechaContratacion, boolean activo) {
-        this(nombre, departamento, salario, fechaContratacion, activo);
+                    LocalDate fechaContratacion, int aniosExperiencia, boolean activo) {
+        this(nombre, departamento, salario, fechaContratacion, aniosExperiencia, activo);
         this.id = id;
     }
 
@@ -72,6 +72,14 @@ public class Empleado {
         this.fechaContratacion = fechaContratacion;
     }
 
+    public int getAniosExperiencia() {
+        return aniosExperiencia;
+    }
+
+    public void setAniosExperiencia(int aniosExperiencia) {
+        this.aniosExperiencia = aniosExperiencia;
+    }
+
     public boolean isActivo() {
         return activo;
     }
@@ -84,6 +92,7 @@ public class Empleado {
     public String toString() {
         return "Empleado{id=" + id + ", nombre='" + nombre + "', departamento='" + departamento
                 + "', salario=" + salario + ", fechaContratacion=" + fechaContratacion
+                + ", aniosExperiencia=" + aniosExperiencia
                 + ", activo=" + activo + "}";
     }
 }
