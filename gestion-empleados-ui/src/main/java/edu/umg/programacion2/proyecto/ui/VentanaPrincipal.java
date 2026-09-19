@@ -43,7 +43,7 @@ public class VentanaPrincipal extends JFrame {
 
     private static final Logger LOG = Logger.getLogger(VentanaPrincipal.class.getName());
     private static final String[] COLUMNAS =
-            {"ID", "Nombre", "Departamento", "Salario", "Contratación", "Activo"};
+            {"ID", "Nombre", "Departamento", "Salario", "Contratación", "Años exp.", "Activo"};
 
     // Longitudes máximas: deben coincidir con las columnas de schema.sql
     private static final int MAX_NOMBRE = 100;
@@ -69,6 +69,7 @@ public class VentanaPrincipal extends JFrame {
     private final JTextField txtDepartamento = new JTextField(25);
     private final JTextField txtSalario = new JTextField(10);
     private final JTextField txtFecha = new JTextField(10);
+    private final JTextField txtAniosExperiencia = new JTextField(5);
     private final JCheckBox chkActivo = new JCheckBox("Activo", true);
 
     public VentanaPrincipal() {
@@ -105,13 +106,13 @@ public class VentanaPrincipal extends JFrame {
         });
 
         // Anchos de columna (ID angosto, Nombre más ancho)
-        int[] anchos = {50, 230, 150, 90, 100, 70};
+        int[] anchos = {50, 200, 140, 90, 100, 70, 70};
         for (int i = 0; i < anchos.length; i++) {
             tabla.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
         }
 
         JScrollPane scroll = new JScrollPane(tabla);
-        scroll.setPreferredSize(new Dimension(760, 260));
+        scroll.setPreferredSize(new Dimension(780, 260));
         return scroll;
     }
 
@@ -123,7 +124,8 @@ public class VentanaPrincipal extends JFrame {
         agregarFila(formulario, 2, "Departamento:", txtDepartamento);
         agregarFila(formulario, 3, "Salario mensual (Q):", txtSalario);
         agregarFila(formulario, 4, "Fecha de contratación (AAAA-MM-DD):", txtFecha);
-        agregarFila(formulario, 5, "", chkActivo);
+        agregarFila(formulario, 5, "Años de experiencia:", txtAniosExperiencia);
+        agregarFila(formulario, 6, "", chkActivo);
 
         JButton btnRegistrar = new JButton("Registrar nuevo");
         JButton btnActualizar = new JButton("Actualizar");
@@ -246,6 +248,7 @@ public class VentanaPrincipal extends JFrame {
                         e.getDepartamento(),
                         String.format(Locale.US, "Q%.2f", e.getSalario()),
                         e.getFechaContratacion(),
+                        e.getAniosExperiencia(),
                         e.isActivo() ? "Activo" : "Inactivo"
                 });
             }
@@ -320,7 +323,21 @@ public class VentanaPrincipal extends JFrame {
             return null;
         }
 
-        return new Empleado(nombre, departamento, salario, fecha, chkActivo.isSelected());
+        int aniosExperiencia;
+        try {
+            aniosExperiencia = Integer.parseInt(txtAniosExperiencia.getText().trim());
+        } catch (NumberFormatException ex) {
+            avisar("Los años de experiencia deben ser un número entero, por ejemplo 3");
+            txtAniosExperiencia.requestFocus();
+            return null;
+        }
+        if (aniosExperiencia < 0) {
+            avisar("Los años de experiencia no pueden ser negativos.");
+            txtAniosExperiencia.requestFocus();
+            return null;
+        }
+
+        return new Empleado(nombre, departamento, salario, fecha, aniosExperiencia, chkActivo.isSelected());
     }
 
     private void cargarSeleccionEnFormulario() {
@@ -337,6 +354,7 @@ public class VentanaPrincipal extends JFrame {
         txtDepartamento.setText(e.getDepartamento());
         txtSalario.setText(e.getSalario().toPlainString());
         txtFecha.setText(String.valueOf(e.getFechaContratacion()));
+        txtAniosExperiencia.setText(String.valueOf(e.getAniosExperiencia()));
         chkActivo.setSelected(e.isActivo());
     }
 
@@ -348,6 +366,7 @@ public class VentanaPrincipal extends JFrame {
         txtDepartamento.setText("");
         txtSalario.setText("");
         txtFecha.setText(LocalDate.now().toString());
+        txtAniosExperiencia.setText("0");
         chkActivo.setSelected(true);
     }
 
