@@ -72,6 +72,9 @@ public class VentanaPrincipal extends JFrame {
     private final JTextField txtAniosExperiencia = new JTextField(5);
     private final JCheckBox chkActivo = new JCheckBox("Activo", true);
 
+    private final JLabel lblMaximo = new JLabel("—");
+    private final JLabel lblMinimo = new JLabel("—");
+
     public VentanaPrincipal() {
         super("Gestión de empleados");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -142,8 +145,16 @@ public class VentanaPrincipal extends JFrame {
         botones.add(btnEliminar);
         botones.add(btnLimpiar);
 
+        JPanel estadisticas = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        estadisticas.setBorder(BorderFactory.createTitledBorder("Experiencia"));
+        estadisticas.add(new JLabel("Máxima experiencia:"));
+        estadisticas.add(lblMaximo);
+        estadisticas.add(new JLabel("Mínima experiencia:"));
+        estadisticas.add(lblMinimo);
+
         JPanel inferior = new JPanel(new BorderLayout(0, 5));
-        inferior.add(formulario, BorderLayout.CENTER);
+        inferior.add(formulario, BorderLayout.NORTH);
+        inferior.add(estadisticas, BorderLayout.CENTER);
         inferior.add(botones, BorderLayout.SOUTH);
         return inferior;
     }
@@ -252,9 +263,33 @@ public class VentanaPrincipal extends JFrame {
                         e.isActivo() ? "Activo" : "Inactivo"
                 });
             }
+            actualizarEstadisticasExperiencia();
         } catch (SQLException ex) {
             mostrarError("No se pudo cargar el listado de empleados.", ex);
         }
+    }
+
+    private void actualizarEstadisticasExperiencia() {
+        if (empleados.isEmpty()) {
+            lblMaximo.setText("—");
+            lblMinimo.setText("—");
+            return;
+        }
+
+        Empleado empleadoMax = empleados.get(0);
+        Empleado empleadoMin = empleados.get(0);
+
+        for (Empleado e : empleados) {
+            if (e.getAniosExperiencia() > empleadoMax.getAniosExperiencia()) {
+                empleadoMax = e;
+            }
+            if (e.getAniosExperiencia() < empleadoMin.getAniosExperiencia()) {
+                empleadoMin = e;
+            }
+        }
+
+        lblMaximo.setText(empleadoMax.getNombre() + " (" + empleadoMax.getAniosExperiencia() + " años)");
+        lblMinimo.setText(empleadoMin.getNombre() + " (" + empleadoMin.getAniosExperiencia() + " años)");
     }
 
     // ---------------------------------------------------------------
