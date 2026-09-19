@@ -15,8 +15,6 @@
     <name>Gestión de empleados - CORE</name>
 
     <dependencies>
-        <!-- Driver de MariaDB: solo se necesita al ejecutar (scope runtime).
-             La UI lo recibe de forma transitiva, sin declararlo ella. -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
